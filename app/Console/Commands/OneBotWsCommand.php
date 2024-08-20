@@ -37,7 +37,7 @@ class OneBotWsCommand extends Command
                     try {
                         $msg = json_decode($msg);
                         if(!empty($msg) && isset($msg->post_type) && $msg->post_type == 'message'){
-                            if(isset($message->group_id)){
+                            if(isset($msg->group_id)){
                                 $message_type = 'group';
                                 $action = 'send_group_msg';
                             }else{

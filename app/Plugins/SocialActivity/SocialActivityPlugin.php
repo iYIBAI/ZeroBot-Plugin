@@ -32,10 +32,6 @@ class SocialActivityPlugin
             return false;
         }
 
-        if($message->message_type != 'private'){
-            return '请私聊创建';
-        }
-
         $activity = SocialActivity::where('activity_date', '>', now())->orderByDesc('id')->first();
         if(!empty($activity)){
             return '已经有一个进行中的活动了';
@@ -52,6 +48,7 @@ class SocialActivityPlugin
 
         $name = $info[0] ?? '';
         $activity_date = $info[1] ?? now();
+        $activity_date = str_ireplace('日期', '', $activity_date);
         $man_limit = $info[2] ?? 0;
         $man_limit = filter_var($man_limit, FILTER_SANITIZE_NUMBER_INT);
         $days_active = $info[3] ?? 0;
