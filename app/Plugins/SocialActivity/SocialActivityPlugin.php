@@ -28,6 +28,10 @@ class SocialActivityPlugin
 
     public static function create($message)
     {
+        if(!self::checkSuperUser($message->sender->user_id)){
+            return false;
+        }
+
         if($message->message_type != 'private'){
             return '请私聊创建';
         }
@@ -76,9 +80,9 @@ class SocialActivityPlugin
         }
 
         $sign_up = $activity->sign_up;
-        // if(isset($sign_up[$message->sender->user_id])){
-        //     return '你已经报名不要重复报名';
-        // }
+        if(isset($sign_up[$message->sender->user_id])){
+            return '你已经报名不要重复报名';
+        }
         $days = 1;
         if($activity->days_active > 1){
             $days = preg_replace('/[^0-9]/', '', $message->raw_message);
@@ -106,12 +110,7 @@ class SocialActivityPlugin
 
     public static function draw($message)
     {
-        $super_user = config('pulgin.super_user');
-        if(empty($super_user)){
-            return false;
-        }
-        $super_user = explode(',', $super_user);
-        if(!in_array($message->sender->user_id, $super_user)){
+        if(!self::checkSuperUser($message->sender->user_id)){
             return false;
         }
         $activity = SocialActivity::where('activity_date', '>', now())->orderByDesc('id')->first();
@@ -146,12 +145,7 @@ class SocialActivityPlugin
 
     public static function help($message)
     {
-        $super_user = config('pulgin.super_user');
-        if(empty($super_user)){
-            return false;
-        }
-
-        if($super_user != $message->sender->user_id){
+        if(!self::checkSuperUser($message->sender->user_id)){
             return false;
         }
 
@@ -170,5 +164,19 @@ class SocialActivityPlugin
         $help .= '   社团活动抽签'.PHP_EOL;
 
         return $help;
+    }
+
+    public static function checkSuperUser($user)
+    {
+        $super_user = config('pulgin.super_user');
+        if(empty($super_user)){
+            return false;
+        }
+        $super_user = explode(',', $super_user);
+        if(!in_array($user, $super_user)){
+            return false;
+        }
+
+        return true;
     }
 }
