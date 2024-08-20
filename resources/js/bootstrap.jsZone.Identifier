@@ -1,0 +1,4 @@
+[ZoneTransfer]
+ZoneId=3
+ReferrerUrl=https://github.com/laravel/laravel
+HostUrl=https://codeload.github.com/laravel/laravel/zip/refs/heads/11.x
