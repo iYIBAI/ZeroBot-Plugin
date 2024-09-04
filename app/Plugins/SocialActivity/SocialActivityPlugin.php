@@ -124,7 +124,6 @@ class SocialActivityPlugin
         //权重
         $weights = [];
         foreach ($activity->sign_up as $key => $value) {
-            $weights += $value['days'];
             for ($i=0; $i < $value['days']; $i++) { 
                 $weights[] = $key;
             }
@@ -133,7 +132,7 @@ class SocialActivityPlugin
         // 随机抽签
         $lucks = [];
         while (count($lucks) < $activity->man_limit) {
-            $random = Arr::random($array);
+            $random = Arr::random($weights);
             in_array($random, $lucks) ?: $lucks[] = $activity->sign_up[$random];
         }
 
